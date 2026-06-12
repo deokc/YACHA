@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>야차 夜叉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #06060A;
+    --bg2: #0D0D16;
+    --panel: rgba(14, 14, 24, 0.82);
+    --panel-solid: #0E0E18;
+    --fg: #EDE7DC;
+    --fg-dim: #9B938A;
+    --muted: #6E6862;
+    --gold: #C9A86C;
+    --gold2: #F0D18C;
+    --gold-dim: #6B5535;
+    --red: #8B2020;
+    --violet: #7B3B8C;
+    --blue: #4A7FA5;
+    --green: #4A7A4A;
+    --border: rgba(201, 168, 108, 0.16);
+    --shadow: 0 24px 70px rgba(0, 0, 0, 0.52);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 50% -10%, rgba(123, 59, 140, 0.18), transparent 34rem),
+      radial-gradient(circle at 10% 20%, rgba(139, 32, 32, 0.11), transparent 26rem),
+      radial-gradient(circle at 85% 70%, rgba(74, 127, 165, 0.10), transparent 28rem),
+      var(--bg);
+    color: var(--fg);
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.72;
+    mix-blend-mode: screen;
+  }
+
+  button, input { font: inherit; }
+
+  .intro {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+    background:
+      radial-gradient(circle at center, rgba(201, 168, 108, 0.12), transparent 18rem),
+      radial-gradient(circle at center, rgba(123, 59, 140, 0.18), transparent 35rem),
+      #030306;
+    transition: opacity 0.9s ease, visibility 0.9s ease, transform 0.9s ease;
+  }
+
+  body.entered .intro {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(1.03);
+  }
+
+  .intro-frame {
+    width: min(100%, 720px);
+    min-height: min(80vh, 720px);
+    display: grid;
+    place-items: center;
+    position: relative;
+    border: 1px solid var(--border);
+    background:
+      linear-gradient(135deg, rgba(201, 168, 108, 0.13), transparent 24%, transparent 76%, rgba(201, 168, 108, 0.10)),
+      rgba(6, 6, 10, 0.72);
+    box-shadow: var(--shadow), inset 0 0 80px rgba(201, 168, 108, 0.04);
+    overflow: hidden;
+  }
+
+  .intro-frame::before,
+  .intro-frame::after {
+    content: '';
+    position: absolute;
+    width: 1px;
+    height: 38%;
+    top: 31%;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    opacity: 0.62;
+  }
+
+  .intro-frame::before { left: 2.2rem; }
+  .intro-frame::after { right: 2.2rem; }
+
+  .intro-sigil {
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: clamp(18rem, 50vw, 32rem);
+    aspect-ratio: 1;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(201, 168, 108, 0.10);
+    border-radius: 50%;
+    animation: slowSpin 34s linear infinite;
+  }
+
+  .intro-sigil::before,
+  .intro-sigil::after {
+    content: '';
+    position: absolute;
+    inset: 10%;
+    border: 1px solid rgba(201, 168, 108, 0.10);
+    transform: rotate(45deg);
+  }
+
+  .intro-sigil::after {
+    inset: 22%;
+    border-radius: 50%;
+    transform: none;
+  }
+
+  @keyframes slowSpin {
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  .intro-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .intro-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: clamp(5.2rem, 17vw, 12rem);
+    font-weight: 900;
+    line-height: 0.92;
+    letter-spacing: 0.03em;
+    text-indent: 0.03em;
+    color: var(--fg);
+    text-shadow:
+      0 0 20px rgba(201, 168, 108, 0.28),
+      0 0 70px rgba(123, 59, 140, 0.26);
+    animation: fadeUp 1.1s ease both;
+  }
+
+  .intro-hanja {
+    margin-top: 0.85rem;
+    font-family: 'Noto Serif KR', serif;
+    color: var(--gold);
+    font-size: clamp(0.92rem, 2.8vw, 1.3rem);
+    letter-spacing: 0.7em;
+    text-indent: 0.7em;
+    opacity: 0;
+    animation: fadeUp 1s 0.35s ease forwards;
+  }
+
+  .enter-btn {
+    margin-top: 4rem;
+    padding: 0.85rem 2.8rem;
+    color: var(--fg);
+    background: rgba(201, 168, 108, 0.06);
+    border: 1px solid rgba(201, 168, 108, 0.42);
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    opacity: 0;
+    animation: fadeUp 1s 0.72s ease forwards;
+  }
+
+  .enter-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 108, 0.18), transparent);
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+
+  .enter-btn:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold2);
+    background: rgba(201, 168, 108, 0.11);
+  }
+
+  .enter-btn:hover::before { transform: translateX(120%); }
+
+  .app {
+    min-height: 100vh;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: opacity 0.8s ease 0.18s, transform 0.8s ease 0.18s;
+  }
+
+  body.entered .app {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    backdrop-filter: blur(18px);
+    background: rgba(6, 6, 10, 0.82);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .topbar-inner {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .brand {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    white-space: nowrap;
+  }
+
+  .nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .tab-btn {
+    border: 1px solid transparent;
+    color: var(--fg-dim);
+    background: transparent;
+    cursor: pointer;
+    padding: 0.48rem 0.88rem;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  }
+
+  .tab-btn:hover,
+  .tab-btn.active {
+    color: var(--fg);
+    border-color: var(--border);
+    background: rgba(201, 168, 108, 0.06);
+  }
+
+  .audio-panel {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    min-width: 190px;
+    justify-content: flex-end;
+    color: var(--fg-dim);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .audio-toggle {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid var(--border);
+    background: rgba(201, 168, 108, 0.05);
+    color: var(--gold);
+    cursor: pointer;
+  }
+
+  .volume-control {
+    accent-color: var(--gold);
+    width: 96px;
+  }
+
+  main {
+    width: min(1180px, calc(100% - 2rem));
+    margin: 0 auto;
+  }
+
+  .page {
+    display: none;
+    padding: 5.5rem 0 6.5rem;
+    animation: pageFade 0.45s ease both;
+  }
+
+  .page.active { display: block; }
+
+  @keyframes pageFade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .page-hero {
+    min-height: 58vh;
+    display: grid;
+    align-items: center;
+    position: relative;
+    padding: 2rem 0 4rem;
+  }
+
+  .page-hero::before {
+    content: '';
+    position: absolute;
+    inset: 8% 0 auto auto;
+    width: min(46vw, 460px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201, 168, 108, 0.13), transparent 68%);
+    pointer-events: none;
+  }
+
+  .page-label,
+  .section-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.42em;
+    color: var(--gold);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 1.1rem;
+  }
+
+  .page-title,
+  .section-title {
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    line-height: 1.18;
+    letter-spacing: -0.03em;
+  }
+
+  .page-title {
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    max-width: 780px;
+  }
+
+  .section-title {
+    font-size: clamp(1.6rem, 4vw, 2.7rem);
+    margin-bottom: 1.2rem;
+  }
+
+  .page-body,
+  .section-body {
+    color: var(--fg-dim);
+    max-width: 710px;
+    line-height: 2;
+    font-size: 0.94rem;
+    margin-top: 1.6rem;
+  }
+
+  /* ── 세계관 첫 화면 리디자인 ── */
+  .world-showcase {
+    min-height: 66vh;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.95fr);
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: center;
+    position: relative;
+    padding: 3rem 0 4.5rem;
+  }
+
+  .world-showcase::before {
+    content: '';
+    position: absolute;
+    inset: 7% -8% 6% -8%;
+    pointer-events: none;
+    background:
+      linear-gradient(90deg, rgba(201, 168, 108, 0.07) 1px, transparent 1px),
+      linear-gradient(0deg, rgba(201, 168, 108, 0.045) 1px, transparent 1px),
+      radial-gradient(circle at 78% 44%, rgba(201, 168, 108, 0.13), transparent 22rem),
+      radial-gradient(circle at 18% 74%, rgba(123, 59, 140, 0.14), transparent 25rem);
+    background-size: 44px 44px, 44px 44px, auto, auto;
+    mask-image: linear-gradient(to bottom, transparent, black 14%, black 86%, transparent);
+    opacity: 0.76;
+  }
+
+  .world-copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .world-copy .page-title {
+    text-shadow: 0 0 32px rgba(201, 168, 108, 0.13);
+  }
+
+  .world-lead {
+    color: var(--fg-dim);
+    max-width: 720px;
+    line-height: 2.08;
+    font-size: 0.96rem;
+    margin-top: 1.7rem;
+    padding-left: 1.4rem;
+    border-left: 1px solid rgba(201, 168, 108, 0.34);
+  }
+
+  .world-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 2rem;
+  }
+
+  .world-keywords span {
+    padding: 0.38rem 0.78rem;
+    border: 1px solid rgba(201, 168, 108, 0.23);
+    background: rgba(201, 168, 108, 0.055);
+    color: var(--gold);
+    font-size: 0.74rem;
+    letter-spacing: 0.14em;
+  }
+
+  .world-dossier {
+    position: relative;
+    z-index: 1;
+    border: 1px solid rgba(201, 168, 108, 0.26);
+    background:
+      linear-gradient(145deg, rgba(201, 168, 108, 0.10), transparent 32%),
+      linear-gradient(315deg, rgba(123, 59, 140, 0.14), transparent 48%),
+      rgba(9, 9, 16, 0.78);
+    box-shadow: var(--shadow), inset 0 0 60px rgba(201, 168, 108, 0.04);
+    overflow: hidden;
+  }
+
+  .world-dossier::before,
+  .world-dossier::after {
+    content: '';
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+
+  .world-dossier::before {
+    top: 1rem;
+    left: 1rem;
+    border-top: 1px solid var(--gold);
+    border-left: 1px solid var(--gold);
+  }
+
+  .world-dossier::after {
+    right: 1rem;
+    bottom: 1rem;
+    border-right: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+
+  .dossier-head {
+    min-height: 74px;
+    padding: 1.3rem 1.45rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .dossier-head span {
+    color: var(--muted);
+    font-size: 0.68rem;
+    letter-spacing: 0.22em;
+  }
+
+  .dossier-head strong {
+    font-family: 'Noto Serif KR', serif;
+    color: var(--gold);
+    font-size: 1.24rem;
+    letter-spacing: 0.12em;
+  }
+
+  .dossier-map {
+    min-height: 360px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at center, rgba(201, 168, 108, 0.15), transparent 8rem),
+      radial-gradient(circle at center, rgba(123, 59, 140, 0.10), transparent 15rem);
+  }
+
+  .dossier-map::before {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    background:
+      linear-gradient(90deg, transparent 49.6%, rgba(201, 168, 108, 0.18) 50%, transparent 50.4%),
+      linear-gradient(0deg, transparent 49.6%, rgba(201, 168, 108, 0.18) 50%, transparent 50.4%);
+    opacity: 0.54;
+  }
+
+  .map-ring {
+    position: absolute;
+    border: 1px solid rgba(201, 168, 108, 0.18);
+    border-radius: 50%;
+    aspect-ratio: 1;
+    transform: rotate(45deg);
+  }
+
+  .ring-one { width: 78%; }
+  .ring-two { width: 56%; border-style: dashed; animation: mapSpin 42s linear infinite; }
+  .ring-three { width: 34%; border-color: rgba(201, 168, 108, 0.32); }
+
+  @keyframes mapSpin {
+    to { transform: rotate(405deg); }
+  }
+
+  .map-core {
+    position: relative;
+    z-index: 1;
+    width: 5.8rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(201, 168, 108, 0.42);
+    background: rgba(6, 6, 10, 0.82);
+    color: var(--gold2);
+    font-family: 'Noto Serif KR', serif;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-indent: 0.2em;
+    box-shadow: 0 0 44px rgba(201, 168, 108, 0.20);
+  }
+
+  .map-node {
+    position: absolute;
+    z-index: 1;
+    padding: 0.28rem 0.62rem;
+    border: 1px solid rgba(201, 168, 108, 0.24);
+    background: rgba(6, 6, 10, 0.76);
+    color: var(--fg-dim);
+    font-size: 0.72rem;
+    white-space: nowrap;
+  }
+
+  .node-a { top: 18%; left: 20%; }
+  .node-b { top: 24%; right: 18%; }
+  .node-c { bottom: 20%; right: 15%; }
+  .node-d { bottom: 24%; left: 17%; }
+
+  .dossier-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .dossier-list div {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 1rem;
+    padding: 0.95rem 1.35rem;
+    border-bottom: 1px solid rgba(201, 168, 108, 0.10);
+  }
+
+  .dossier-list div:last-child { border-bottom: 0; }
+
+  .dossier-list span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .dossier-list strong {
+    color: var(--fg);
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+
+  .world-note-strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: -1rem 0 2.8rem;
+    border: 1px solid var(--border);
+    background: rgba(201, 168, 108, 0.045);
+  }
+
+  .world-note-strip span {
+    padding: 0.95rem 0.8rem;
+    border-right: 1px solid var(--border);
+    color: var(--fg-dim);
+    text-align: center;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+  }
+
+  .world-note-strip span:last-child { border-right: 0; }
+
+  .rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .law-grid,
+  .faction-grid,
+  .char-grid {
+    display: grid;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .law-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    margin-top: 2.7rem;
+  }
+
+  .law-item,
+  .faction-card,
+  .char-card,
+  .rank-item {
+    background: rgba(6, 6, 10, 0.82);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .law-item {
+    padding: 2rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .law-item:hover,
+  .faction-card:hover,
+  .char-card:hover { background: var(--panel-solid); }
+
+  .law-item::after,
+  .faction-card::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width 0.4s ease;
+  }
+
+  .law-item:hover::after,
+  .faction-card:hover::after { width: 100%; }
+
+  .law-num {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold-dim);
+    line-height: 1;
+    margin-bottom: 0.9rem;
+  }
+
+  .law-name {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .law-desc,
+  .rank-desc,
+  .faction-desc,
+  .char-contract,
+  .char-quote,
+  .char-ult {
+    font-size: 0.82rem;
+    color: var(--fg-dim);
+    line-height: 1.82;
+  }
+
+  .rank-list {
+    margin-top: 3rem;
+    border: 1px solid var(--border);
+  }
+
+  .rank-item {
+    display: grid;
+    grid-template-columns: 138px 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .rank-item:last-child { border-bottom: none; }
+  .rank-item:hover { background: var(--panel-solid); }
+
+  .rank-badge {
+    padding: 1.5rem;
+    border-right: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    text-align: center;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.76rem;
+    letter-spacing: 0.1em;
+    font-weight: 900;
+  }
+
+  .rank-badge.tier1 { color: #7A7570; }
+  .rank-badge.tier2 { color: #C4A265; }
+  .rank-badge.tier3 { color: #B87070; }
+  .rank-badge.tier4 { color: #9B7FBF; }
+
+  .rank-content { padding: 1.55rem 1.7rem; }
+  .rank-title { font-weight: 700; margin-bottom: 0.35rem; }
+
+  .faction-grid {
+    grid-template-columns: repeat(auto-fit, minmax(245px, 1fr));
+    margin-top: 2.7rem;
+  }
+
+  .faction-card {
+    padding: 2.3rem 1.8rem;
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faction-icon {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1.2rem;
+  }
+
+  .faction-card.hobeob .faction-icon, .faction-card.hobeob .faction-slogan { color: var(--blue); }
+  .faction-card.keumryun .faction-icon, .faction-card.keumryun .faction-slogan { color: var(--gold); }
+  .faction-card.banhon .faction-icon, .faction-card.banhon .faction-slogan { color: var(--violet); }
+  .faction-card.banjija .faction-icon, .faction-card.banjija .faction-slogan { color: var(--green); }
+
+  .faction-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.12rem;
+    font-weight: 900;
+    margin-bottom: 0.25rem;
+  }
+
+  .faction-alias {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+
+  .faction-slogan {
+    margin: 1.1rem 0 1.25rem;
+    padding: 1rem 0 0 1rem;
+    border-left: 1px solid currentColor;
+    font-family: 'Noto Serif KR', serif;
+    font-size: 0.85rem;
+    line-height: 1.8;
+  }
+
+  .char-faction-header {
+    margin-top: 4rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .char-faction-header:first-of-type { margin-top: 3rem; }
+
+  .char-faction-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.08rem;
+    font-weight: 900;
+  }
+
+  .char-faction-name.hobeob  { color: var(--blue); }
+  .char-faction-name.keumryun { color: var(--gold); }
+  .char-faction-name.banhon  { color: var(--violet); }
+  .char-faction-name.banjija { color: var(--green); }
+
+  .char-faction-cnt {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  .char-grid {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    margin-top: 1.2rem;
+  }
+
+  .char-card {
+    border: 0;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    display: block;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .char-card:hover,
+  .char-card:focus-visible {
+    transform: translateY(-3px);
+    outline: none;
+  }
+
+  .char-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 0 34px 34px;
+    border-color: transparent transparent rgba(201, 168, 108, 0.13) transparent;
+    transition: border-width 0.3s;
+  }
+
+  .char-card:hover::after { border-width: 0 0 50px 50px; }
+
+  .char-photo {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background:
+      linear-gradient(135deg, rgba(201, 168, 108, 0.13), transparent 50%),
+      radial-gradient(circle at center, rgba(123, 59, 140, 0.14), transparent 65%),
+      #0B0B12;
+    border-bottom: 1px solid var(--border);
+    display: grid;
+    place-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .char-photo::before {
+    content: 'IMAGE';
+    color: rgba(201, 168, 108, 0.28);
+    font-family: 'Noto Serif KR', serif;
+    letter-spacing: 0.32em;
+    font-size: 0.72rem;
+  }
+
+  .char-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    background: #0B0B12;
+  }
+
+  .char-photo img[src=""] { display: none; }
+
+  .char-info { padding: 1.45rem 1.35rem 1.65rem; }
+
+  .char-header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.8rem;
+  }
+
+  .char-name {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.08rem;
+    font-weight: 900;
+  }
+
+  .char-meta {
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  .char-tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1rem;
+  }
+
+  .char-tag {
+    font-size: 0.68rem;
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--border);
+    color: var(--fg-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .char-tag.yakcha {
+    border-color: rgba(201, 168, 108, 0.38);
+    color: var(--gold);
+  }
+
+  .char-contract strong {
+    color: var(--fg);
+    font-weight: 700;
+  }
+
+  .char-quote {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  .char-ult { margin-top: 0.8rem; color: rgba(201, 168, 108, 0.66); }
+  .char-ult span { font-family: 'Noto Serif KR', serif; font-weight: 900; color: var(--gold); margin-right: 0.3rem; }
+
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 8000;
+    display: none;
+    place-items: center;
+    padding: 1.2rem;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(8px);
+  }
+
+  .modal.open { display: grid; }
+
+  .modal-box {
+    --modal-image-size: min(430px, 72vh, 44vw);
+    width: min(980px, calc(100vw - 2.4rem));
+    max-height: calc(var(--modal-image-size) + 2px);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, rgba(201, 168, 108, 0.08), rgba(6, 6, 10, 0.96) 42%), var(--panel-solid);
+    box-shadow: var(--shadow);
+    position: relative;
+    animation: modalIn 0.28s ease both;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 3;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--border);
+    background: rgba(6, 6, 10, 0.9);
+    color: var(--fg);
+    cursor: pointer;
+  }
+
+  .modal-content .char-card {
+    display: grid;
+    grid-template-columns: var(--modal-image-size) minmax(0, 1fr);
+    height: var(--modal-image-size);
+    max-height: var(--modal-image-size);
+    cursor: default;
+    transform: none;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .modal-content .char-card::after { display: none; }
+
+  /* 상세정보 모달: 1:1 이미지 박스와 설명 박스를 같은 높이로 고정 */
+  .modal-content .char-photo {
+    width: var(--modal-image-size) !important;
+    height: var(--modal-image-size) !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1 !important;
+    align-self: stretch;
+    border-right: 1px solid var(--border);
+    border-bottom: 0;
+    background:
+      linear-gradient(135deg, rgba(201, 168, 108, 0.13), transparent 50%),
+      radial-gradient(circle at center, rgba(123, 59, 140, 0.14), transparent 65%),
+      #0B0B12;
+  }
+
+  .modal-content .char-photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain !important;
+    object-position: center center;
+    background: #0B0B12;
+    image-rendering: auto;
+    transform: none !important;
+  }
+
+  .modal-content .char-info {
+    height: var(--modal-image-size);
+    min-height: 0;
+    overflow-y: auto;
+    padding: 3.2rem 2.2rem 2.2rem;
+  }
+
+  .modal-content .char-info::-webkit-scrollbar { width: 6px; }
+  .modal-content .char-info::-webkit-scrollbar-thumb { background: rgba(201, 168, 108, 0.28); }
+  .modal-content .char-info::-webkit-scrollbar-track { background: rgba(6, 6, 10, 0.45); }
+
+  .modal-content .char-name { font-size: clamp(1.7rem, 4vw, 2.5rem); }
+  .modal-content .char-contract,
+  .modal-content .char-quote,
+  .modal-content .char-ult { font-size: 0.92rem; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    text-align: center;
+    padding: 3.8rem 1rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+  }
+
+  footer .footer-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.1em;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 900px) {
+    .world-showcase {
+      grid-template-columns: 1fr;
+      min-height: auto;
+      padding-top: 2rem;
+    }
+
+    .world-dossier {
+      max-width: 620px;
+    }
+
+    .world-note-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .world-note-strip span:nth-child(2) { border-right: 0; }
+    .world-note-strip span:nth-child(-n+2) { border-bottom: 1px solid var(--border); }
+  }
+
+  @media (max-width: 820px) {
+    .topbar-inner { align-items: stretch; flex-direction: column; padding: 1rem 0; }
+    .brand { text-align: center; }
+    .audio-panel { justify-content: center; min-width: 0; }
+    .page { padding-top: 4rem; }
+    .modal-box {
+      --modal-image-size: min(520px, calc(100vw - 2.4rem));
+      width: min(560px, calc(100vw - 2.4rem));
+      max-height: min(88vh, 820px);
+      overflow: auto;
+    }
+    .modal-content .char-card {
+      grid-template-columns: 1fr;
+      height: auto;
+      max-height: none;
+      overflow: visible;
+    }
+    .modal-content .char-photo {
+      width: 100% !important;
+      height: auto !important;
+      min-height: 0 !important;
+      aspect-ratio: 1 / 1 !important;
+      border-right: 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-content .char-info {
+      height: auto;
+      min-height: 0;
+      overflow: visible;
+    }
+  }
+
+  @media (max-width: 600px) {
+
+    .world-note-strip { grid-template-columns: 1fr; }
+    .world-note-strip span,
+    .world-note-strip span:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--border); }
+    .world-note-strip span:last-child { border-bottom: 0; }
+    .dossier-map { min-height: 300px; }
+    .dossier-list div { grid-template-columns: 1fr; gap: 0.25rem; }
+    .world-lead { padding-left: 1rem; }
+    main { width: min(100% - 1rem, 1180px); }
+    .intro-frame { min-height: 74vh; }
+    .intro-frame::before { left: 1rem; }
+    .intro-frame::after { right: 1rem; }
+    .rank-item { grid-template-columns: 86px 1fr; }
+    .rank-badge { padding: 1rem 0.7rem; font-size: 0.64rem; }
+    .rank-content { padding: 1.2rem; }
+    .tab-btn { padding: 0.45rem 0.68rem; font-size: 0.76rem; }
+    .page-title { font-size: clamp(2.15rem, 13vw, 3.4rem); }
+  }
+</style>
+</head>
+<body>
+
+<div class="intro" aria-label="인트로 화면">
+  <div class="intro-frame">
+    <div class="intro-sigil" aria-hidden="true"></div>
+    <div class="intro-content">
+      <h1 class="intro-title">야차</h1>
+      <p class="intro-hanja">夜叉</p>
+      <button class="enter-btn" type="button" id="enterBtn">입장</button>
+    </div>
+  </div>
+</div>
+
+<div class="app" aria-live="polite">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">야차 夜叉</div>
+      <nav class="nav-tabs" aria-label="카테고리">
+        <button class="tab-btn active" type="button" data-page="world">세계관</button>
+        <button class="tab-btn" type="button" data-page="characters">등장인물</button>
+      </nav>
+      <div class="audio-panel">
+        <button class="audio-toggle" type="button" id="audioToggle" aria-label="브금 재생 또는 정지">♪</button>
+        <span>BGM</span>
+        <input class="volume-control" id="volumeControl" type="range" min="0" max="1" step="0.01" value="0.45" aria-label="브금 볼륨">
+      </div>
+    </div>
+  </header>
+
+  <audio id="bgm" loop preload="auto" src="https://raw.githubusercontent.com/deokc/YACHA/main/Night%20Ledger_02.mp3"></audio>
+
+  <main>
+    <section id="world" class="page active">
+      <div class="world-showcase">
+        <div class="world-copy">
+          <span class="page-label">World</span>
+          <h2 class="page-title">명계와 현세,<br>경계가 허물어진 도시</h2>
+          <p class="world-lead">
+            신단시. 먼 옛날 신에게 제사를 지내던 제단이었다는 설화를 품은 이 도시는
+            밤이 깊어질수록 현세의 윤곽이 흐려진다. 오래된 사당 터, 버려진 지하철역,
+            재개발 현장처럼 기억에서 밀려난 장소마다 명계의 숨결이 새어 나오고,
+            그 균열을 사람들은 ‘틈’이라 부른다.
+          </p>
+          <div class="world-keywords" aria-label="세계관 핵심 키워드">
+            <span>명계</span>
+            <span>현세</span>
+            <span>틈</span>
+            <span>계약</span>
+            <span>담보</span>
+          </div>
+        </div>
+
+        <aside class="world-dossier" aria-label="신단시 관측 기록">
+          <div class="dossier-head">
+            <span>SHINDAN INCIDENT LOG</span>
+            <strong>신단시</strong>
+          </div>
+
+          <div class="dossier-map" aria-hidden="true">
+            <div class="map-ring ring-one"></div>
+            <div class="map-ring ring-two"></div>
+            <div class="map-ring ring-three"></div>
+            <span class="map-core">틈</span>
+            <span class="map-node node-a">사당 터</span>
+            <span class="map-node node-b">폐역</span>
+            <span class="map-node node-c">재개발 구역</span>
+            <span class="map-node node-d">폐건물</span>
+          </div>
+
+          <div class="dossier-list">
+            <div><span>관측 대상</span><strong>야차 · 계약자 · 틈</strong></div>
+            <div><span>주요 현상</span><strong>정신 속삭임</strong></div>
+            <div><span>최대 위험</span><strong>담보 귀속 · 계약 파기</strong></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="world-note-strip" aria-label="세계관 분위기 요약">
+        <span>명계 주파수 감지</span>
+        <span>현세 간섭 제한</span>
+        <span>계약자 추적 기록</span>
+        <span>담보 회수 경고</span>
+      </div>
+
+      <hr class="rule">
+
+      <span class="section-label">Rules</span>
+      <h2 class="section-title">이 세계의 법칙</h2>
+      <p class="section-body">힘은 공짜가 아니다. 야차와 계약하는 순간, 인간은 자신의 일부를 명계에 맡긴다.</p>
+
+      <div class="law-grid">
+        <div class="law-item">
+          <div class="law-num">一</div>
+          <div class="law-name">계약의 법칙</div>
+          <div class="law-desc">야차는 계약자의 신체 일부를 ‘담보’로 삼아 현세에 힘을 투사한다. 계약이 파기되거나 계약자가 사망하면 담보는 명계로 귀속된다.</div>
+        </div>
+        <div class="law-item">
+          <div class="law-num">二</div>
+          <div class="law-name">간섭의 제약</div>
+          <div class="law-desc">계약 없이 야차는 현세에 어떠한 물리적 영향도 줄 수 없다. 오직 관찰하거나 계약을 원하는 인간에게 정신적으로 속삭이는 것만 가능하다.</div>
+        </div>
+        <div class="law-item">
+          <div class="law-num">三</div>
+          <div class="law-name">야차의 격</div>
+          <div class="law-desc">야차에게도 급이 존재한다. 격이 높을수록 강력한 힘을 주지만 요구하는 담보 또한 치명적이다.</div>
+        </div>
+        <div class="law-item">
+          <div class="law-num">四</div>
+          <div class="law-name">다중 계약</div>
+          <div class="law-desc">여러 야차와의 계약은 가능하나 담보의 중첩, 힘의 충돌, 야차의 질투 등 감당해야 할 리스크도 그만큼 늘어난다.</div>
+        </div>
+      </div>
+
+      <hr class="rule">
+
+      <div id="rank" class="world-block">
+
+      <span class="page-label">Hierarchy</span>
+      <h2 class="page-title">야차의 격 格</h2>
+      <p class="page-body">명계에서 탄생하는 방식과 기원에 따라 네 단계의 격으로 구분된다.</p>
+
+      <div class="rank-list">
+        <div class="rank-item">
+          <div class="rank-badge tier1">하급 夜叉</div>
+          <div class="rank-content">
+            <div class="rank-title">흔한 사물 · 약한 생물의 사념</div>
+            <div class="rank-desc">국소적 신체 변형이나 일상적 사물의 강화 수준. 돌, 나무 등 하위 자연물의 업보가 뭉쳐 탄생한다.</div>
+          </div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-badge tier2">중급 夜叉</div>
+          <div class="rank-content">
+            <div class="rank-title">불 · 물 · 번개 · 맹수 · 파괴 무기</div>
+            <div class="rank-desc">물리 법칙을 가볍게 무시하는 초자연적 파괴력. 인류가 보편적으로 두려워하는 자연계의 업보에서 탄생한다.</div>
+          </div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-badge tier3">상급 夜叉</div>
+          <div class="rank-content">
+            <div class="rank-title">지진 · 역병 · 공허 · 시간 · 중력</div>
+            <div class="rank-desc">광범위한 공간 지배, 인과율 조작, 대규모 학살이 가능한 수준. 인류가 거스를 수 없는 거대한 자연의 법칙에서 탄생한다.</div>
+          </div>
+        </div>
+        <div class="rank-item">
+          <div class="rank-badge tier4">시조 夜叉</div>
+          <div class="rank-content">
+            <div class="rank-title">생과 사 · 인과율 · 윤회의 근원</div>
+            <div class="rank-desc">세계의 규칙을 새로 쓰는 수준. 명계가 생겨날 때부터 존재했거나 세상의 근원적 규칙 자체가 야차의 형상을 취한 신화적 존재. 반혼교가 현세에 강림시키려는 것이 바로 이들이다.</div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <hr class="rule">
+
+      <div id="factions" class="world-block">
+
+      <span class="page-label">Factions</span>
+      <h2 class="page-title">신단시의 네 세력</h2>
+      <p class="page-body">법 위에서, 법 아래서, 혹은 법 바깥에서. 각자의 방식으로 살아남는다.</p>
+
+      <div class="faction-grid">
+        <article class="faction-card hobeob">
+          <div class="faction-icon">護</div>
+          <h3 class="faction-name">호법부</h3>
+          <div class="faction-alias">護法部 · 특수재난안전과 · 국가 비밀기관</div>
+          <blockquote class="faction-slogan">“우리는 어둠 속에서 싸우지만, 빛을 등지지 않는다.”</blockquote>
+          <p class="faction-desc">
+            시청 소속 공무원이라는 신분 뒤에 숨은 야차주 집단. 시민의 안전과 사회 질서 유지를 위해 야차로 인한 사건을 은폐하고, 법을 어지럽히는 계약자들을 사냥한다.
+            철저한 상명하복. 국가 지원 장비. 희생정신.
+          </p>
+        </article>
+
+        <article class="faction-card keumryun">
+          <div class="faction-icon">金</div>
+          <h3 class="faction-name">금륜 그룹</h3>
+          <div class="faction-alias">재개발 · 사금융 · 엔터테인먼트</div>
+          <blockquote class="faction-slogan">“법은 약한 놈들이나 지키는 거다. 강한 놈은 법을 만든다.”</blockquote>
+          <p class="faction-desc">
+            신단시를 지배하던 조폭 ‘금륜파’가 야차의 힘을 얻어 기업형으로 진화한 합법적 야차주 카르텔. 법의 안과 밖을 교묘히 오가며 부와 권력을 독점한다.
+            막대한 자본. 냉혹한 규율. 배신자 불용.
+          </p>
+        </article>
+
+        <article class="faction-card banhon">
+          <div class="faction-icon">魂</div>
+          <h3 class="faction-name">반혼교</h3>
+          <div class="faction-alias">返魂敎 · 사이비 종교 · 광신도 집단</div>
+          <blockquote class="faction-slogan">“이 고통스러운 현세를 정화하고, 위대한 신(야차)의 낙원을 강림시켜라.”</blockquote>
+          <p class="faction-desc">
+            시조 야차를 현세에 강림시키려는 광기의 집단. 신체를 바치는 것을 ‘성스러운 헌신’으로 여기며 대규모 인신공양과 테러도 서슴지 않는다.
+            가장 예측 불가. 죽음을 두려워하지 않는다.
+          </p>
+        </article>
+
+        <article class="faction-card banjija">
+          <div class="faction-icon">信</div>
+          <h3 class="faction-name">반지하 흥신소</h3>
+          <div class="faction-alias">흥신소 · 생계형 조합</div>
+          <blockquote class="faction-slogan">“대의? 구원? 그런 건 배부른 소리고. 당장 다음 달 월세부터 내야지.”</blockquote>
+          <p class="faction-desc">
+            신단시 변두리 반지하에 자리잡은 바퀴벌레 같은 존재들. 호법부의 추적을 피하고, 금륜의 하청을 받고, 반혼교의 뒤를 캐 돈을 뜯어낸다.
+            기준은 둘. ‘돈이 되는가’, ‘살아남을 수 있는가’.
+          </p>
+        </article>
+      </div>
+      </div>
+    </section>
+
+    <section id="characters" class="page">
+      <span class="page-label">Characters</span>
+      <h2 class="page-title">야차주</h2>
+      <p class="page-body">담보를 내걸고 야차와 계약한 자들.</p>
+
+      <div class="char-faction-header">
+        <span class="char-faction-name hobeob">호법부</span>
+        <span class="char-faction-cnt">4명</span>
+      </div>
+      <div class="char-grid">
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%B8%A0%EC%9A%94%ED%83%8001.png" alt="츠요타"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">츠요타</span><span class="char-meta">女 · 26</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">혈계의 야차 (중급)</span><span class="char-tag">담보: 피</span></div>
+            <div class="char-contract"><strong>카타나</strong> 공격 · 원칙주의 · 임무 시 냉혹<br>백발 포니테일 / 적안</div>
+            <div class="char-quote">“방금 제 지시 못 들으셨습니까? …위험하니까 제 등 뒤에서 떨어지지 마세요.”</div>
+            <div class="char-ult"><span>개문(開門)</span>만개한 혈해의 정원 — 붉은 달이 떠오르고 핏빛 꽃밭 영역으로 전환, 광역 살상</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EA%B0%95%EB%AC%B501.png" alt="강묵"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">강묵</span><span class="char-meta">男 · 29</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">공허의 야차 (상급)</span><span class="char-tag">담보: 한쪽 눈</span></div>
+            <div class="char-contract"><strong>검은 불꽃 소환</strong> · 격투술 · 과묵함<br>흑발 / 호박안 / 안대형 붕대</div>
+            <div class="char-quote">“……비켜 서 계십시오. 한 번만 말합니다.”</div>
+            <div class="char-ult"><span>개문(開門)</span>허무의 목격자 — 거대한 야차의 심연안이 떠오르며 영역 내 시청각을 지우고 절대 참격</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%82%AC%ED%95%9C%EC%9A%B401.png" alt="사한운"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">사한운</span><span class="char-meta">男 · 25</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">해월의 야차 (중급)</span><span class="char-tag">담보: 머리카락</span></div>
+            <div class="char-contract"><strong>카타나</strong> 공격 · 포커페이스지만 속은 부끄럼쟁이<br>백발·다크블루 반반머리 / 벽안</div>
+            <div class="char-quote">“……뭐야. 보지 마. ……안 부끄러워, 죽고 싶어?”</div>
+            <div class="char-ult"><span>개문(開門)</span>명경지수 — 거대한 푸른 만월과 수면 영역, 중력 무시 고속 이동 연속 참격</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%9D%B4%ED%9C%98%EC%98%8101.png" alt="이휘영"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">이휘영</span><span class="char-meta">女 · 29</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">풍의 야차 (중급)</span><span class="char-tag">담보: 폐</span></div>
+            <div class="char-contract"><strong>진공 · 기류 제어</strong> · 쾌활함 · 분위기 메이커<br>금발 / 자안</div>
+            <div class="char-quote">“에이~ 그게 뭐 어때서. 별거 아니잖아? 기운들 내자고!”</div>
+            <div class="char-ult"><span>개문(開門)</span>엔드리스 볼텍스 — 거대한 진공 폭풍 생성, 주변의 모든 것을 빨아들임</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="char-faction-header">
+        <span class="char-faction-name keumryun">금륜 그룹</span>
+        <span class="char-faction-cnt">3명</span>
+      </div>
+      <div class="char-grid">
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EA%B8%88%ED%83%9C%EC%8B%9D01.png" alt="금태식"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">금태식</span><span class="char-meta">男 · 32</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">명부의 야차 (상급)</span><span class="char-tag">담보: 수명</span></div>
+            <div class="char-contract"><strong>중력 제어</strong> · 금륜 그룹 대표 · 잔인함 · 지배욕 강함<br>잿빛 올백 / 회안 / 선글라스</div>
+            <div class="char-quote">“짖는 건 자유지만 선은 넘지 마라. 내 수명이 줄어들기 전에 네 목숨이 먼저 날아갈 수 있으니까.”</div>
+            <div class="char-ult"><span>개문(開門)</span>염라의 심판대 — 명부에 이름을 적으면 야차 그림자가 나타나서 목을 벤다</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%97%B0%EC%A7%80%EC%95%8801.png" alt="연지안"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">연지안</span><span class="char-meta">女 · 26</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">향음의 야차 (중급)</span><span class="char-tag">담보: 목</span></div>
+            <div class="char-contract"><strong>언령</strong> · 오만함 · 독설가<br>자홍색 단발 / 분홍안 / 목 타투</div>
+            <div class="char-quote">“……아아, 호법부 개새끼들? 신경 쓰지 마, 조만간 치워버릴 테니까.”</div>
+            <div class="char-ult"><span>개문(開門)</span>천벌의 독백 — 야차 능력 강제 봉인, “죽어” 한 마디로 뇌 신경·심장 동시 폭파</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%B0%A8%EC%A3%BC%EC%9B%9002.png" alt="차주원"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">차주원</span><span class="char-meta">男 · 27</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">총의 야차 (중급)</span><span class="char-tag">담보: 손가락</span></div>
+            <div class="char-contract"><strong>지탄</strong> — 손가락 총으로 공기 압축 발사 · 위기불감증 · 낙천적<br>녹발 / 적안 / 손가락 타투</div>
+            <div class="char-quote">“어어~! 방금 그 공격, 나 진짜 맞을 뻔했다?”</div>
+            <div class="char-ult"><span>개문(開門)</span>무한의 표적 — 하늘에 거대한 조준점이 생기며 상대를 끊임없이 추적 사격</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="char-faction-header">
+        <span class="char-faction-name banhon">반혼교</span>
+        <span class="char-faction-cnt">1명</span>
+      </div>
+      <div class="char-grid">
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%97%B0%ED%99%9401.png" alt="연화"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">연화</span><span class="char-meta">女 · 28</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">죽음의 야차 (상급)</span><span class="char-tag">담보: 심장</span></div>
+            <div class="char-contract"><strong>정신조종</strong> · 반혼교 교주 · 자애를 가장한 잔혹함 · 광신적 광기<br>밝은 금발 / 분홍안 / 검은 안대</div>
+            <div class="char-quote">“가엾은 아이야, 명계의 품에서 다시 태어나렴.”</div>
+            <div class="char-ult"><span>개문(開門)</span>반혼의 밤 — 검은 구체와 가시덩굴 영역, 죽은 자들을 명계의 괴물로 부활시킴</div>
+          </div>
+        </button>
+      </div>
+
+      <div class="char-faction-header">
+        <span class="char-faction-name banjija">반지하 흥신소</span>
+        <span class="char-faction-cnt">2명</span>
+      </div>
+      <div class="char-grid">
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%EC%9D%B4%EB%B0%80%EB%A0%B901.png" alt="이밀령"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">이밀령</span><span class="char-meta">男 · 22</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">전뇌의 야차 (하급)</span><span class="char-tag">담보: 귀</span></div>
+            <div class="char-contract"><strong>디지털 해킹</strong> · 네트워크망 침투 · 개인주의 · 나른함<br>백발 / 옅은 자안</div>
+            <div class="char-quote">“……용건만. 선입금 안 되면…… 나 안 움직여.”</div>
+            <div class="char-ult"><span>개문(開門)</span>인포메이션 오버로드 — 전자기기 폭주, 적의 뇌 신경망 해킹·마비</div>
+          </div>
+        </button>
+
+        <button class="char-card" type="button">
+          <figure class="char-photo"><img src="https://raw.githubusercontent.com/deokc/YACHA/main/%ED%8C%90%EC%B9%9801.png" alt="판치"></figure>
+          <div class="char-info">
+            <div class="char-header"><span class="char-name">판치</span><span class="char-meta">女 · 22</span></div>
+            <div class="char-tag-row"><span class="char-tag yakcha">신족의 야차 (하급)</span><span class="char-tag">담보: 다리</span></div>
+            <div class="char-contract"><strong>초고속 이동</strong> · 각력 강화 · 긍정적 · 돈이라면 사족 못 씀<br>청록색 양갈래 / 황안</div>
+            <div class="char-quote">“호법부 나으리들 왔어? 아유, 커피라도 타드려야지~ 당근 유료지만!”</div>
+            <div class="char-ult"><span>개문(開門)</span>인드라의 잔상 — 영역 내 모든 적을 보이지 않는 속도로 연타·짓밟기</div>
+          </div>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-title">야차 夜叉</div>
+    <p>담보를 내걸기 전에, 한 번 더 생각하라.</p>
+  </footer>
+</div>
+
+<div class="modal" id="charModal" role="dialog" aria-modal="true" aria-label="등장인물 상세정보">
+  <div class="modal-box">
+    <button class="modal-close" type="button" id="modalClose" aria-label="닫기">×</button>
+    <div class="modal-content" id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+  const enterBtn = document.getElementById('enterBtn');
+  const bgm = document.getElementById('bgm');
+  const audioToggle = document.getElementById('audioToggle');
+  const volumeControl = document.getElementById('volumeControl');
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const pages = document.querySelectorAll('.page');
+  const modal = document.getElementById('charModal');
+  const modalContent = document.getElementById('modalContent');
+  const modalClose = document.getElementById('modalClose');
+
+  bgm.volume = Number(volumeControl.value);
+
+  function playBgm() {
+    if (!bgm.getAttribute('src')) return;
+    bgm.play()
+      .then(() => audioToggle.textContent = 'Ⅱ')
+      .catch(() => audioToggle.textContent = '♪');
+  }
+
+  enterBtn.addEventListener('click', () => {
+    document.body.classList.add('entered');
+    playBgm();
+  });
+
+  volumeControl.addEventListener('input', () => {
+    bgm.volume = Number(volumeControl.value);
+  });
+
+  audioToggle.addEventListener('click', () => {
+    if (bgm.paused) {
+      playBgm();
+    } else {
+      bgm.pause();
+      audioToggle.textContent = '♪';
+    }
+  });
+
+  tabBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.page;
+      tabBtns.forEach(item => item.classList.toggle('active', item === btn));
+      pages.forEach(page => page.classList.toggle('active', page.id === target));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  document.querySelectorAll('.char-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const clone = card.cloneNode(true);
+      clone.removeAttribute('type');
+      clone.setAttribute('tabindex', '-1');
+      modalContent.innerHTML = '';
+      modalContent.appendChild(clone);
+      modal.classList.add('open');
+      modalClose.focus();
+    });
+  });
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modalContent.innerHTML = '';
+  }
+
+  modalClose.addEventListener('click', closeModal);
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeModal();
+  });
+
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && modal.classList.contains('open')) closeModal();
+  });
+</script>
+</body>
+</html>
